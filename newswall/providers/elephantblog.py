@@ -28,7 +28,7 @@ class Provider(ProviderBase):
             try:
                 body = entry.richtextcontent_set.all()[0].text
             except:
-                body = u''
+                continue
 
             self.create_story(url,
                 title=entry.title,
