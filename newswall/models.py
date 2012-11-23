@@ -10,11 +10,20 @@ class SourceManager(models.Manager):
 
 
 class Source(models.Model):
+
+    SOURCE_CHOICES = (('facebook', u'Facebook'),
+                      ('twitter', u'Twitter'),
+                      ('blog', u'Elephantblog'),
+                      ('rss', u'RSS'))
+
     is_active = models.BooleanField(_('is active'), default=True)
     name = models.CharField(_('name'), max_length=100)
     slug = models.SlugField(_('slug'), unique=True)
     priority = models.SmallIntegerField(_('priority'), default=0,
-                help_text=_('Set the priority in case of cross posts.'))
+        help_text=_('Set the priority in case of cross posts. Higher is better.'))
+    # currently only informational. Used for css styling.
+    source = models.CharField(_('source'), max_length=10,
+                              choices=SOURCE_CHOICES, blank=True)
 
     data = models.TextField(_('configuration data'), blank=True)
 
