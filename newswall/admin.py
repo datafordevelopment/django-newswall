@@ -4,8 +4,8 @@ from newswall.models import Source, Story
 
 
 admin.site.register(Source,
-    list_display=('name', 'is_active', 'ordering', 'priority'),
-    list_editable=('is_active', 'ordering', 'priority'),
+    list_display=('name', 'is_active', 'priority'),
+    list_editable=('is_active', 'priority'),
     list_filter=('is_active',),
     prepopulated_fields={'slug': ('name',)},
     )

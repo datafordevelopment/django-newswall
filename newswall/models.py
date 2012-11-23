@@ -13,14 +13,13 @@ class Source(models.Model):
     is_active = models.BooleanField(_('is active'), default=True)
     name = models.CharField(_('name'), max_length=100)
     slug = models.SlugField(_('slug'), unique=True)
-    ordering = models.IntegerField(_('ordering'), default=0)
     priority = models.SmallIntegerField(_('priority'), default=0,
                 help_text=_('Set the priority in case of cross posts.'))
 
     data = models.TextField(_('configuration data'), blank=True)
 
     class Meta:
-        ordering = ['ordering', 'name']
+        ordering = ['priority', 'name']
         verbose_name = _('source')
         verbose_name_plural = _('sources')
 
