@@ -1,0 +1,25 @@
+{% load i18n applicationcontent_tags %}
+<div class="newswall">
+  <a href="{% app_reverse 'elephantblog_entry_archive' 'elephantblog.urls' %}"><h2>{% trans "News" %}</h2></a>
+  {% for story in stories %}
+  <div class="row linecontent">
+    <div class="span16">
+        <hr{% if forloop.first %} class="no-space-before"{% endif %}>
+        <a class="entry source{{ story.source.id }}" href="{{ story.get_absolute_url }}">
+            <div class="icon"></div>
+            <h2 class="title">
+            {% ifequal story.source.id 2 %}
+                {# if twitter remove profile name in the  beginning #}
+                {{ story.title|slice:"11:" }}
+            {% else %}
+                {{ story.title }}
+            {% endifequal %}
+        </h3>
+            <div class="entry-metadata"><span class="source">{{ story.source }}</span>&nbsp;|&nbsp;{{ story.timestamp|date:"d. F Y" }}</div>
+            {{ story.body|safe|truncatewords_html:50 }}
+        </a>
+        {% if forloop.last %}<hr>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
