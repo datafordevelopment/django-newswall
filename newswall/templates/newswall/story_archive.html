@@ -20,7 +20,7 @@
 
 {% block object_list %}
 {% for story in object_list %}
-    <article{% if story.source %} class="{{ story.source }}-story"{% endif %}>
+    <article{% if story.source.source %} class="{{ story.source.source }}-story"{% endif %}>
         <h2><a href="{{ story.get_absolute_url }}">{{ story }}</a></h2>
         <small>
             <a href="{{ category.source.get_absolute_url }}">{{ category.source }}</a> |

@@ -1,6 +1,6 @@
-{% load i18n %}
+{% load i18n applicationcontent_tags %}
 <div class="newswall">
-  <a href="/{{ LANGUAGE_CODE }}/news-events/"><h2>{% trans "News" %}</h2></a>
+  <a href="{% app_reverse 'elephantblog_entry_archive' 'elephantblog.urls' %}"><h2>{% trans "News" %}</h2></a>
   {% for story in stories %}
   <div class="row linecontent">
     <div class="span16">

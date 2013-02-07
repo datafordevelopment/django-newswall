@@ -38,7 +38,7 @@ class ProviderBase(object):
             for story in recent_stories:
                 match = difflib.SequenceMatcher(None,
                                                 defaults['title'], story.title)
-                if match.quick_ratio() > 0.6:
+                if match.ratio() > 0.6:
                     # the two stories are similar:
                     if self.source.priority <= story.source.priority:
                         defaults['is_active'] = False
