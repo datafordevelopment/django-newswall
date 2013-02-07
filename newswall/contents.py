@@ -15,7 +15,7 @@ class NewswallContent(models.Model):
 
     def render(self, request, **kwargs):
         stories = []
-        sources = Source.objects.filter(show_min__gt=0)
+        sources = Source.objects.select_related('stories').filter(show_min__gt=0)
         # no sanity check here for performance reasons
         for source in sources:
             stories.extend(source.stories.active()[:source.show_min])
@@ -29,7 +29,7 @@ class NewswallContent(models.Model):
                 break
 
         context = {
-            'stories': stories
+            'stories': stories[:self.num_stories]
         }
         return render_to_string([
             'content/newswall/{0}_default.html'.format(self.region),
