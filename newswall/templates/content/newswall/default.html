@@ -1,0 +1,18 @@
+{% load i18n %}
+<div class="newswall">
+  <a href="/{{ LANGUAGE_CODE }}/news-events/"><h2>{% trans "News" %}</h2></a>
+  {% for story in stories %}
+  <div class="row linecontent">
+    <div class="span16">
+        <hr{% if forloop.first %} class="no-space-before"{% endif %}>
+        <a class="entry {{ story.source.source }}" href="{{ story.get_absolute_url }}">
+            <div class="icon"></div>
+            <h2 class="title">{{ story.title }}</h2>
+            <div class="entry-metadata"><span class="source">{{ story.source }}</span>&nbsp;|&nbsp;{{ story.timestamp|date:"d. F Y" }}</div>
+            {{ story.body|safe|truncatewords_html:50 }}
+        </a>
+        {% if forloop.last %}<hr>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>

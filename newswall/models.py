@@ -22,6 +22,8 @@ class Source(models.Model):
     priority = models.SmallIntegerField(_('priority'), default=0,
         help_text=_('Set the priority in case of cross posts. Higher is better.'))
     # currently only informational. Used for css styling.
+    show_min = models.PositiveSmallIntegerField(_('Show at least'), default=0,
+        help_text=_('Show at least this many entries'))
     source = models.CharField(_('source'), max_length=10,
                               choices=SOURCE_CHOICES, blank=True)
 
