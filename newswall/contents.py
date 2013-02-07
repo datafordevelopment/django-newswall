@@ -17,19 +17,28 @@ class NewswallContent(models.Model):
         stories = []
         sources = Source.objects.select_related('stories').filter(show_min__gt=0)
         # no sanity check here for performance reasons
+        length = len(stories)
+        # cache source for template.
         for source in sources:
-            stories.extend(source.stories.active()[:source.show_min])
-        others = Story.objects.active()[:self.num_stories]
-        # fill up the list with remaining new stories.
-        for story in others:
-            if len(stories) < self.num_stories:
-                if story not in stories:
-                    stories.append(story)
-            else:
-                break
+            l=source.stories.active()[:source.show_min]
+            for s in l:
+                s.source = source
+            stories.extend(l)
+        if length < self.num_stories:
+            others = Story.objects.active().select_related('source')[:self.num_stories]
+            # fill up the list with remaining new stories.
+            for story in others:
+                if length < self.num_stories:
+                    if story not in stories:
+                        stories.append(story)
+                else:
+                    break
+
+        if len(stories) > self.num_stories:
+            stories = stories[:self.num_stories]
 
         context = {
-            'stories': stories[:self.num_stories]
+            'stories': stories
         }
         return render_to_string([
             'content/newswall/{0}_default.html'.format(self.region),
