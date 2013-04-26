@@ -2,7 +2,9 @@
 Newswall
 ========
 
-This is my version of a Tumblelog. Why, you might ask? Because I can.
+This is a news aggregator that can pull content from various sources. It can
+detect and filter cross posts of the same content to avoid duplicates.
+
 
 
 Installation and usage
