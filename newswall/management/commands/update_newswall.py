@@ -10,6 +10,9 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         for source in Source.objects.filter(is_active=True):
-            config = json.loads(source.data)
+            try:
+                config = json.loads(source.data)
+            except ValueError as e:
+                raise ValueError("Malformed JSON data in configuration for %s" % source)
             provider = importlib.import_module(config['provider']).Provider(source, config)
             provider.update()
