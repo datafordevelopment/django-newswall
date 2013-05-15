@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -52,7 +52,7 @@ class StoryManager(models.Manager):
 class Story(models.Model):
     # Mandatory data
     is_active = models.BooleanField(_('is active'), default=True)
-    timestamp = models.DateTimeField(_('timestamp'), default=datetime.now)
+    timestamp = models.DateTimeField(_('timestamp'), default=timezone.now)
     object_url = models.URLField(_('object URL'), unique=True)
     source = models.ForeignKey(Source, related_name='stories',
         verbose_name=_('source'))

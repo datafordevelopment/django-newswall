@@ -20,8 +20,11 @@ Required configuration keys::
 import urllib
 
 from datetime import datetime
+from django.utils import timezone
+from django.conf import settings
 
-from django.utils import simplejson
+
+import json
 
 from newswall.providers.base import ProviderBase
 
@@ -32,7 +35,7 @@ class Provider(ProviderBase):
         query = "https://graph.facebook.com/%s/feed?%s" % (self.config['object'], urllib.urlencode(args))
         file = urllib.urlopen(query)
         raw = file.read()
-        response = simplejson.loads(raw)
+        response = json.loads(raw)
 
         from_id = self.config.get('from_id', None)
 
@@ -44,10 +47,14 @@ class Provider(ProviderBase):
                 continue
 
             link = 'https://facebook.com/%s' % entry['id'].replace('_', '/posts/')
+            timestamp = datetime.strptime(entry['created_time'],
+                                            '%Y-%m-%dT%H:%M:%S+0000')
+            if getattr(settings, 'USE_TZ', False):
+                timestamp = timezone.make_aware(timestamp, timezone.utc)
 
             self.create_story(link,
                 title=entry.get('name') or entry.get('message') or entry.get('story', u''),
                 body=entry.get('message', u''),
                 image_url=entry.get('picture', u''),
-                timestamp=datetime.strptime(entry['created_time'], '%Y-%m-%dT%H:%M:%S+0000'),
-                )
+                timestamp=timestamp
+            )

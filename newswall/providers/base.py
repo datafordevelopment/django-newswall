@@ -1,4 +1,5 @@
-from datetime import date, timedelta
+from datetime import timedelta
+from django.utils import timezone
 
 import difflib
 
@@ -16,7 +17,6 @@ class ProviderBase(object):
 
     def create_story(self, object_url, **kwargs):
         force_update = kwargs.get('force_update', False)
-
         try:
             story = Story.objects.get(object_url=object_url)
         except Story.DoesNotExist:
@@ -32,7 +32,7 @@ class ProviderBase(object):
 
         if defaults.get('title'):
             recent_stories = Story.objects.filter(is_active=True,
-                              timestamp__gte=date.today()
+                              timestamp__gte=timezone.now()
                             - timedelta(days=VERIFY_CROSSPOST_DAYS))
             # check if the titles are similar
             for story in recent_stories:
