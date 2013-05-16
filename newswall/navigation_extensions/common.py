@@ -27,6 +27,5 @@ def date_tree():
             # list might be missing some elements because it is also the first year.
             months_this_year = range(1, today.month+1)
             date_tree[year] = [m for m in date_tree[year] if m in months_this_year]
-    print date_tree
     return date_tree.items()
 
