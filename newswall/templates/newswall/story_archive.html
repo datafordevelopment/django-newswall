@@ -21,12 +21,12 @@
 {% block object_list %}
 {% for story in object_list %}
     <article{% if story.source.source %} class="{{ story.source.source }}-story"{% endif %}>
-        <h2><a href="{{ story.get_absolute_url }}">{{ story }}</a></h2>
+        <h2><a href="{{ story.get_absolute_url }}">{{ story|safe|striptags|urlize }}</a></h2>
         <small>
             <a href="{{ category.source.get_absolute_url }}">{{ category.source }}</a> |
             {{ story.timestamp|date:"j F Y" }}
         </small>
-        <p>{{ story.body|striptags|truncatewords:20|safe|urlize }}</p>
+        <p>{{ story.body|safe|striptags|truncatewords:20|urlize }}</p>
     </article>
 {% endfor %}
 {% endblock %}
