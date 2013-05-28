@@ -96,6 +96,7 @@ Create a twitter app.
 You'll find the consumer_key/secret on the detail page.
 Because this is a read-only application, you can create
 your oauth_token/secret directly on the bottom of the app detail page.
+<https://dev.twitter.com/apps>
 
 Required configuration keys::
 

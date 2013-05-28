@@ -34,7 +34,8 @@ Required configuration keys::
 import tweepy
 
 from newswall.providers.base import ProviderBase
-
+from django.conf import settings
+from django.utils import timezone
 
 class Provider(ProviderBase):
     def update(self):
@@ -54,7 +55,10 @@ class Provider(ProviderBase):
         for entry in entries:
             link = 'http://twitter.com/%s/status/%s' % (self.config['user'],
                 entry.id)
+            timestamp = entry.created_at
+            if getattr(settings, 'USE_TZ', False):
+                    timestamp = timezone.make_aware(timestamp, timezone.utc)
             self.create_story(link,
                 title=entry.text,
-                timestamp=entry.created_at
+                timestamp=timestamp
             )
