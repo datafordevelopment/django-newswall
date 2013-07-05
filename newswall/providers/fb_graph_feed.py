@@ -52,9 +52,15 @@ class Provider(ProviderBase):
             if getattr(settings, 'USE_TZ', False):
                 timestamp = timezone.make_aware(timestamp, timezone.utc)
 
-            self.create_story(link,
-                title=entry.get('name') or entry.get('message') or entry.get('story', u''),
-                body=entry.get('message', u''),
-                image_url=entry.get('picture', u''),
-                timestamp=timestamp
-            )
+            kwargs = {
+                'object_url': link,
+                'title': entry.get('name') or entry.get('message') or entry.get('story', u''),
+                'body': entry.get('message', u''),
+                'image_url': entry.get('picture', u''),
+                'timestamp': timestamp
+            }
+            if kwargs['title'] == kwargs['body']:
+                kwargs['body'] = u''
+
+
+            self.create_story(**kwargs)
