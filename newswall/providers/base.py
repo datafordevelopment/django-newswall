@@ -27,7 +27,7 @@ class ProviderBase(object):
             else:
                 story.delete()
 
-        defaults = {'source': self.source, 'object_url': object_url }
+        defaults = {'source': self.source }
         defaults.update(kwargs)
 
         if defaults.get('title'):
@@ -46,4 +46,6 @@ class ProviderBase(object):
                         # deactivate the other story
                         story.deactivate()
 
-        return Story.objects.create(**defaults)
+        return Story.objects.get_or_create(object_url=object_url,
+                                           defaults=defaults)
+

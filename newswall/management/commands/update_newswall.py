@@ -12,7 +12,7 @@ class Command(NoArgsCommand):
         for source in Source.objects.filter(is_active=True):
             try:
                 config = json.loads(source.data)
-            except ValueError as e:
+            except ValueError:
                 raise ValueError("Malformed JSON data in configuration for %s" % source)
             provider = importlib.import_module(config['provider']).Provider(source, config)
             provider.update()

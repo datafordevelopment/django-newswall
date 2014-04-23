@@ -23,7 +23,8 @@ class Provider(ProviderBase):
         feed = feedparser.parse(self.config['source'])
         for entry in feed['entries']:
             if hasattr(entry, 'date_parsed'):
-                timestamp = datetime.fromtimestamp(time.mktime(entry.date_parsed))
+                timestamp = datetime.fromtimestamp(
+                    time.mktime(entry.date_parsed))
                 if getattr(settings, 'USE_TZ', False):
                     timestamp = timezone.make_aware(timestamp, timezone.utc)
             elif hasattr(entry, 'published_parsed'):
@@ -36,4 +37,4 @@ class Provider(ProviderBase):
                 title=entry.title,
                 body=entry.description,
                 timestamp=timestamp,
-                )
+            )

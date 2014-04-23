@@ -1,32 +1,56 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
 import os
-import setuplib
+from setuptools import setup, find_packages
 
-packages, package_data = setuplib.find_packages('newswall')
 
-setup(name='django-newswall',
+def read(filename):
+    return open(os.path.join(os.path.dirname(__file__), filename)).read()
+
+
+setup(
+    name='django-newswall',
     version=__import__('newswall').__version__,
-    description='A django-based news aggregator',
-    long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read().decode('utf-8'),
+    description='My version of a Tumblelog, because I can.',
+    long_description=read('README.rst'),
     author='Matthias Kestenholz',
-    author_email='mk@feinheit.ch',
-    url='http://github.com/matthiask/django-newswall/',
+    author_email='mk@406.ch',
+    url='https://github.com/matthiask/django-newswall',
     license='BSD License',
     platforms=['OS Independent'],
-    packages=packages,
-    package_data=package_data,
+    packages=find_packages(
+        exclude=[],
+    ),
+    package_data={
+        '': ['*.html', '*.txt'],
+        'newswall': [
+            'locale/*/*/*.*',
+            # 'static/newswall.*',
+            # 'static/newswall.*',
+            'templates/*.*',
+            'templates/*/*.*',
+            'templates/*/*/*.*',
+            'templates/*/*/*/*.*',
+        ],
+    },
+    install_requires=[
+        'Django>=1.4.2',
+    ],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        # 'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        # 'Programming Language :: Python :: 3',
+        # 'Programming Language :: Python :: 3.3',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development',
-        'Topic :: Software Development :: Libraries :: Application Frameworks',
     ],
+    zip_safe=False,
 )

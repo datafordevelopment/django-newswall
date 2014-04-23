@@ -39,11 +39,11 @@ from django.utils import timezone
 
 class Provider(ProviderBase):
     def update(self):
-
         auth = tweepy.OAuthHandler(
             self.config['consumer_key'],
             self.config['consumer_secret']
         )
+
         auth.set_access_token(
             self.config['oauth_token'],
             self.config['oauth_secret']
@@ -53,8 +53,8 @@ class Provider(ProviderBase):
         entries = api.user_timeline(screen_name=self.config['user'])
 
         for entry in entries:
-            link = 'http://twitter.com/%s/status/%s' % (self.config['user'],
-                entry.id)
+            link = 'http://twitter.com/%s/status/%s' % (
+                self.config['user'], entry.id)
             timestamp = entry.created_at
             if getattr(settings, 'USE_TZ', False):
                     timestamp = timezone.make_aware(timestamp, timezone.utc)

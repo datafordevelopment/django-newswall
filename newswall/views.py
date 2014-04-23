@@ -9,28 +9,35 @@ except ImportError:
     from django.core import paginator
 
 
-__all__ = ('ArchiveIndexView', 'YearArchiveView', 'MonthArchiveView', 'DayArchiveView',
-    'DateDetailView', 'SourceArchiveIndexView')
+__all__ = (
+    'ArchiveIndexView', 'YearArchiveView', 'MonthArchiveView',
+    'DayArchiveView', 'DateDetailView', 'SourceArchiveIndexView')
 
 
 class NewswallMixin(object):
     """
-    This mixin autodetects whether the blog is integrated through an
-    ApplicationContent and automatically switches to inheritance2.0
-    if that's the case.
+    This mixin autodetects whether the blog is integrated through a FeinCMS
+    ApplicationContent and automatically switches to inheritance2.0 if that's
+    the case. Please note that FeinCMS is NOT required, this is purely for the
+    convenience of FeinCMS users. The functionality for this is contained
+    inside ``base_template`` and ``render_to_response``.
 
     Additionally, it adds the view instance to the template context
     as ``view``.
-
-    This requires at least FeinCMS v1.5.
     """
+
+    @property
+    def base_template(self):
+        if hastattr(request, '_feincms_page'):
+            return request._feincms_page.template.path
+        return 'base.html'
 
     def get_context_data(self, **kwargs):
         kwargs.update({'view': self})
         return super(NewswallMixin, self).get_context_data(**kwargs)
 
     def get_queryset(self):
-        return Story.objects.active().select_related('source') #.transform(entry_list_lookup_related)
+        return Story.objects.active().select_related('source')
 
     def render_to_response(self, context, **response_kwargs):
         if 'app_config' in getattr(self.request, '_feincms_extra_context', {}):
