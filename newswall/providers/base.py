@@ -17,6 +17,9 @@ class ProviderBase(object):
 
     def create_story(self, object_url, **kwargs):
         force_update = kwargs.get('force_update', False)
+        # The URL can only be 255 characters long to be indexed
+        if len(object_url) > 255:
+            object_url = object_url.split('?')[0]
         try:
             story = Story.objects.get(object_url=object_url)
         except Story.DoesNotExist:
@@ -45,7 +48,6 @@ class ProviderBase(object):
                     else:
                         # deactivate the other story
                         story.deactivate()
-
         return Story.objects.get_or_create(object_url=object_url,
                                            defaults=defaults)
 
