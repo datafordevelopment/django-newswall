@@ -20,11 +20,12 @@ Required configuration keys::
 import urllib
 
 from datetime import datetime
-from django.utils import timezone
-from django.conf import settings
 
-
-import json
+try:
+    import json
+except ImportError:
+    # maintain compatibility with Django < 1.7
+    from django.utils import simplejson as json
 
 from newswall.providers.base import ProviderBase
 
@@ -32,7 +33,8 @@ from newswall.providers.base import ProviderBase
 class Provider(ProviderBase):
     def update(self):
         args = {'access_token': self.config['access_token']}
-        query = "https://graph.facebook.com/%s/feed?%s" % (
+        query = "https://graph.facebook.com/v2.4/%s/feed?%s&fields=" \
+                "full_picture,picture,name,message,story,created_time,from" % (
             self.config['object'],
             urllib.urlencode(args),
         )
@@ -49,22 +51,19 @@ class Provider(ProviderBase):
             if 'to' in entry:  # messages
                 continue
 
-            link = 'https://facebook.com/%s' % \
-                   entry['id'].replace('_', '/posts/')
-            timestamp = datetime.strptime(entry['created_time'],
-                                            '%Y-%m-%dT%H:%M:%S+0000')
-            if getattr(settings, 'USE_TZ', False):
-                timestamp = timezone.make_aware(timestamp, timezone.utc)
+            link = 'https://facebook.com/%s' % (
+                entry['id'].replace('_', '/posts/'),
+            )
 
-            kwargs = {
-                'object_url': link,
-                'title': entry.get('name') or entry.get('message') \
-                                           or entry.get('story', u''),
-                'body': entry.get('message', u''),
-                'image_url': entry.get('picture', u''),
-                'timestamp': timestamp
-            }
-            if kwargs['title'] == kwargs['body']:
-                kwargs['body'] = u''
-
-            self.create_story(**kwargs)
+            self.create_story(
+                link,
+                title=(
+                    entry.get('name')
+                    or entry.get('message')
+                    or entry.get('story', u'')
+                ),
+                body=entry.get('message', u''),
+                image_url=entry.get('full_picture', u''),
+                timestamp=datetime.strptime(
+                    entry['created_time'], '%Y-%m-%dT%H:%M:%S+0000'),
+            )
