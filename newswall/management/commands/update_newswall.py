@@ -1,6 +1,11 @@
 from django.core.management.base import NoArgsCommand
 from django.utils import importlib
-import json
+
+try:
+    import json
+except ImportError:
+    # maintain compatibility with Django < 1.7
+    from django.utils import simplejson as json
 
 from newswall.models import Source
 
@@ -10,9 +15,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         for source in Source.objects.filter(is_active=True):
-            try:
-                config = json.loads(source.data)
-            except ValueError:
-                raise ValueError("Malformed JSON data in configuration for %s" % source)
-            provider = importlib.import_module(config['provider']).Provider(source, config)
+            config = json.loads(source.data)
+            provider = importlib.import_module(
+                config['provider']).Provider(source, config)
             provider.update()
